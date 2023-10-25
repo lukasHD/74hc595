@@ -1,8 +1,9 @@
-# Quick Test 
+# Quick Test
 
-import RPi.GPIO as GPIO
 from time import sleep
 
+# import RPi.GPIO as GPIO
+from RPi import GPIO
 
 # GPIO.setmode(GPIO.BOARD)
 GPIO.setmode(GPIO.BCM)
@@ -32,30 +33,29 @@ def pulse_register_clk():
     sleep(CLK_TIME)
 
 def write_char(value :bool):
-    assert type(value) == bool
+    assert isinstance(value, bool)
     GPIO.output(SERIN_PIN, value)
     sleep(SETTLE_TIME)
     pulse_ser_clk()
 
-def write_word(input :str):
-    assert len(input) == 8
-    for char in input:
+def write_word(input_word :str):
+    assert len(input_word) == 8
+    for char in input_word:
         if char == "1":
             char_bool = True
         elif char == "0":
             char_bool = False
-        else: 
-            raise(ValueError())
+        else:
+            raise ValueError()
         write_char(char_bool)
 
 def latch():
     pulse_register_clk()
-    pass
 
-def write_and_load(input :str, reversed :bool = False):
-    if reversed:
-        input = input[::-1]
-    write_word(input)
+def write_and_load(input_word :str, reverse_word :bool = False):
+    if reverse_word:
+        input_word = input_word[::-1]
+    write_word(input_word)
     latch()
 
 def initialize_gpio():
@@ -103,7 +103,7 @@ def execute_test():
     for x in range(256):
         s = "{:08b}".format(x)
         # print(s)
-        write_and_load(s, reversed = True)
+        write_and_load(s, reverse_word = True)
         sleep(BLINKENLIGHTS/4)
     for x in range(256):
         s = "{:08b}".format(x)
