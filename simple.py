@@ -1,4 +1,4 @@
-# Quick Test
+'''Some module docstring'''
 
 from time import sleep
 from enum import Enum

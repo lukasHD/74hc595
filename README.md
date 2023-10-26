@@ -26,3 +26,4 @@ Connect `OE` to a GPIO if you need to disable the outputs at some point in the p
 * Expand to multiple Shiftregisters
 * Fix the Linting 
 * Tune the delays so we don't waste time sleeping
+* Add `OE` and `CLR` support in the library
