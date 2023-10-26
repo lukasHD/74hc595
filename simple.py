@@ -2,10 +2,6 @@
 
 from time import sleep
 from enum import Enum
-
-# import RPi.GPIO as GPIO
-# from RPi import GPIO
-
 from gpiozero import DigitalOutputDevice
 
 REGISTER_CLK_PIN = 22
@@ -13,10 +9,10 @@ SERIAL_CLK_PIN = 27
 SERIN_PIN = 17
 # SEROUT_PIN = 14
 
-SETTLE_TIME = 0.001  # 10µs
-
 
 class Clocktype(Enum):
+    """clocktype specifies if the clock is active on rising or falling edge"""
+
     RISING = 1
     FALLING = 2
 
@@ -42,16 +38,18 @@ class ClockPin(DigitalOutputDevice):
 
 
 class SR_74hc595:
+    """simple library for a single 74hc595 Chip on a borad with pullup/down on reset/clear and output enable"""
+
     def __init__(
         self,
         serin_pin=SERIN_PIN,
         serin_clk_pin=SERIAL_CLK_PIN,
         register_clk_pin=REGISTER_CLK_PIN,
     ) -> None:
-        # create the gpio objects
         self.serial_in = DigitalOutputDevice(serin_pin, initial_value=False)
         self.serial_clk = ClockPin(serin_clk_pin)
         self.register_clk = ClockPin(register_clk_pin)
+        self.settle_time = 0.00001  # 10µs
 
     def write_char(self, value: bool) -> None:
         """Write single boolean value into the shift storage.
@@ -63,7 +61,7 @@ class SR_74hc595:
             self.serial_in.on()
         else:
             self.serial_in.off()
-        sleep(SETTLE_TIME)
+        sleep(self.settle_time)
         self.serial_clk.pulse()
 
     def write_word(self, input_word: str) -> None:
@@ -88,6 +86,9 @@ class SR_74hc595:
         self.register_clk.pulse()
 
     def write_and_load(self, input_word: str, reverse_word: bool = False) -> None:
+        """write the word to the Shiftregister and latch it to the outputs.
+        Allows a reversal of the value to tune LSB/MSB notation.
+        """
         if reverse_word:
             input_word = input_word[::-1]
         self.write_word(input_word)
@@ -99,7 +100,7 @@ BLINKENLIGHTS = 0.2
 
 def counter1(sr: SR_74hc595):
     for x in range(256):
-        s = "{:08b}".format(x)
+        s = f"{x:08b}"
         sr.write_and_load(s, reverse_word=True)
         sleep(BLINKENLIGHTS / 4)
 
@@ -109,6 +110,7 @@ def counter2(sr: SR_74hc595):
         s = f"{x:08b}"
         sr.write_and_load(s)
         sleep(BLINKENLIGHTS / 4)
+
 
 def checker(sr: SR_74hc595):
     sr.write_and_load("10101010")
@@ -121,6 +123,7 @@ def checker(sr: SR_74hc595):
     sleep(BLINKENLIGHTS)
     sr.write_and_load("00000000")
     sleep(BLINKENLIGHTS)
+
 
 def kit(sr: SR_74hc595):
     sr.write_and_load("00000001")
@@ -157,6 +160,7 @@ def kit(sr: SR_74hc595):
     sleep(BLINKENLIGHTS)
     sr.write_and_load("00000000")
     sleep(BLINKENLIGHTS)
+
 
 def execute_test():
     sr = SR_74hc595()
