@@ -38,7 +38,9 @@ class ClockPin(DigitalOutputDevice):
 
 
 class SR_74hc595:
-    """simple library for a single 74hc595 Chip on a borad with pullup/down on reset/clear and output enable"""
+    """simple library for a single 74hc595 Chip on a borad 
+    with pullup/down on reset/clear and output enable
+    """
 
     def __init__(
         self,
