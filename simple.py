@@ -21,7 +21,7 @@ class ClockPin(DigitalOutputDevice):
     """ClockPin Class extends a standard DigitalOutputDevice but alllows a pulse method"""
 
     def __init__(self, pin, clk_type: Clocktype = Clocktype.RISING):
-        self.clk_time = 0.00001  # 10µs
+        self.clk_time = 0.00000001  # 0.01 µs
         self.type = clk_type
         if clk_type == Clocktype.RISING:
             super().__init__(pin=pin, initial_value=False, active_high=True)
@@ -51,7 +51,7 @@ class SR_74hc595:
         self.serial_in = DigitalOutputDevice(serin_pin, initial_value=False)
         self.serial_clk = ClockPin(serin_clk_pin)
         self.register_clk = ClockPin(register_clk_pin)
-        self.settle_time = 0.00001  # 10µs
+        self.settle_time = 0.00000001  # 0.01µs
 
     def write_char(self, value: bool) -> None:
         """Write single boolean value into the shift storage.
