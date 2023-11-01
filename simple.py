@@ -100,17 +100,10 @@ class SR_74hc595:
 BLINKENLIGHTS = 0.2
 
 
-def counter1(sr: SR_74hc595):
+def counter(sr: SR_74hc595, reverse_count :bool = False):
     for x in range(256):
         s = f"{x:08b}"
-        sr.write_and_load(s, reverse_word=True)
-        sleep(BLINKENLIGHTS / 4)
-
-
-def counter2(sr: SR_74hc595):
-    for x in range(256):
-        s = f"{x:08b}"
-        sr.write_and_load(s)
+        sr.write_and_load(s, reverse_word=reverse_count)
         sleep(BLINKENLIGHTS / 4)
 
 
@@ -128,8 +121,9 @@ def checker(sr: SR_74hc595):
 
 
 def kit(sr: SR_74hc595):
-    sr.write_and_load("00000001")
-    sleep(BLINKENLIGHTS)
+    # sr.write_and_load("00000001")
+    # sleep(BLINKENLIGHTS)
+    BLINKENLIGHTS = 0.05
     sr.write_and_load("00000001")
     sleep(BLINKENLIGHTS)
     sr.write_and_load("00000010")
@@ -146,6 +140,8 @@ def kit(sr: SR_74hc595):
     sleep(BLINKENLIGHTS)
     sr.write_and_load("10000000")
     sleep(BLINKENLIGHTS)
+    # sr.write_and_load("10000000")
+    # sleep(BLINKENLIGHTS)
     sr.write_and_load("01000000")
     sleep(BLINKENLIGHTS)
     sr.write_and_load("00100000")
@@ -158,10 +154,10 @@ def kit(sr: SR_74hc595):
     sleep(BLINKENLIGHTS)
     sr.write_and_load("00000010")
     sleep(BLINKENLIGHTS)
-    sr.write_and_load("00000001")
-    sleep(BLINKENLIGHTS)
-    sr.write_and_load("00000000")
-    sleep(BLINKENLIGHTS)
+    # sr.write_and_load("00000001")
+    # sleep(BLINKENLIGHTS)
+    # sr.write_and_load("00000000")
+    # sleep(BLINKENLIGHTS)
 
 
 def execute_test():
@@ -170,11 +166,13 @@ def execute_test():
     sleep(1)
     checker(sr=sr)
     sleep(3)
-    kit(sr=sr)
+    for _ in range (10):
+        kit(sr=sr)
+    sr.write_and_load("00000000")
     sleep(3)
-    counter1(sr=sr)
+    counter(sr=sr, reverse_count=True)
     sleep(3)
-    counter2(sr=sr)
+    counter(sr=sr, reverse_count=False)
 
 
 if __name__ == "__main__":
