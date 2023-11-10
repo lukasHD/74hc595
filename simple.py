@@ -108,6 +108,7 @@ class SR_74hc595:
         input_word can only contain the charcters '1' or '0'
         """
         assert len(input_word) == self.word_length
+        input_word = input_word[::-1]
         for char in input_word:
             if char == "1":
                 char_bool = True
@@ -131,6 +132,13 @@ class SR_74hc595:
             input_word = input_word[::-1]
         self.write_word(input_word)
         self.latch()
+
+    def close(self):
+        self.serial_clk.close()
+        self.register_clk.close()
+        self.output_enable.close()
+        self.serial_in.close()
+        self.register_clr.close()
 
 
 BLINKENLIGHTS = 0.2
@@ -250,20 +258,39 @@ def execute_test():
     # sleep(15)
     
     print("Let's get this party started!")
-    sleep(1)
-    checker(sr=sr)
-    sleep(3)
-    for _ in range (10):
-        kit(sr=sr)
-    sr.write_and_load("00000000")
-    sleep(3)
-    counter(sr=sr, reverse_count=True)
-    sleep(3)
-    counter(sr=sr, reverse_count=False)
+    # sleep(1)
+    # checker(sr=sr)
+    # sleep(3)
+    # for _ in range (10):
+    #     kit(sr=sr)
+    # sr.write_and_load("00000000")
+    # sleep(3)
+    # counter(sr=sr, reverse_count=True)
+    # sleep(3)
+    # counter(sr=sr, reverse_count=False)
 
-    sleep(2)
+    sleep(0.2)
     print("Reset now")
     sr.reset()
+    sr.close()
+
+    sr = SR_74hc595(number_of_chips=2)
+    sr.write_and_load("0000000000000000")
+    sleep(3)
+    sr.write_and_load("0000000000000100")
+    sleep(3)
+    sr.write_and_load("1100010000000000")
+    sleep(3)
+    sr.write_and_load("1000000000000001")
+    sleep(3)
+    sr.write_and_load("0000000000000100", reverse_word=True)
+    sleep(3)
+    sr.write_and_load("1100010000000000", reverse_word=True)
+    sleep(3)
+
+    print("Reset now")
+    sr.reset()
+    sr.close()
 
 
 if __name__ == "__main__":
