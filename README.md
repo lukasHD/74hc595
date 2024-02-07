@@ -4,7 +4,7 @@ Simple Library for my Shift Register Board.
 
 ## Impressions
 
-![Picture of the PCB featuring one Chip and 8 LEDS as well as a few resitors and capacitors](resources/pictures/PCB-shot.jpg)
+![Picture of the PCB featuring one Chip and 8 LEDS as well as a few resitors and capacitors](resources/pictures/PCB-shot.jpg | width=50)
 
 ## Usage
 
