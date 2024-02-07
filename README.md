@@ -2,6 +2,10 @@
 
 Simple Library for my Shift Register Board.
 
+## Impressions
+
+![Picture of the PCB featuring one Chip and 8 LEDS as well as a few resitors and capacitors](resources/pictures/PCB-shot.jpg)
+
 ## Usage
 
 Connect `Serin`, `serial clock` and `register clock` to GPIO pins on the Raspberry Pi.
