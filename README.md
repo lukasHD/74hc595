@@ -4,7 +4,7 @@ Simple Library for my Shift Register Board.
 
 ## Impressions
 
-<img src='resources/pictures/PCB-shot.jpg' width='200'>
+<img src='resources/pictures/PCB-shot.jpg' width='500'>
 
 ## Usage
 
